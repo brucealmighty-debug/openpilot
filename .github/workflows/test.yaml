@@ -29,6 +29,24 @@ jobs:
         name: tmppilot.tar.gz
         path: tmppilot.tar.gz
 
+  build_release:
+    name: build release
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: actions/checkout@v2
+    - name: Checkout submodules
+      run: |
+        git submodule update --init
+    - name: Build docker image
+      run: |
+        docker pull $(grep -ioP '(?<=^from)\s+\S+' Dockerfile.openpilot) || true
+        docker pull docker.io/commaai/openpilot:latest || true
+        docker build --cache-from docker.io/commaai/openpilot:latest -t tmppilot -f Dockerfile.openpilot .
+    - name: Build release
+      run: |
+        CMD="cd /tmp/tmppilot && scons -c && mkdir release && cp -pR --parents $(cat release/files_common) release/ && cd release && scons -j$(nproc)"
+        docker run tmppilot /bin/bash -c "$CMD"
+
   push:
     name: push
     runs-on: ubuntu-16.04
