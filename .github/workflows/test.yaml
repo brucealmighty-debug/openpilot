@@ -42,7 +42,7 @@ jobs:
         docker build --cache-from docker.io/commaai/openpilot:latest -t tmppilot -f Dockerfile.openpilot .
     - name: Build release
       run: |
-        CMD="cd /tmp/openpilot && scons -c && mkdir /tmp/release && cp -pR --parents $(cat release/files_common) /tmp/release/ && cd /tmp/release && scons -j$(nproc)"
+        CMD="cd /tmp && mv openpilot tmppilot && mkdir openpilot && cd tmppilot && scons -c && cp -pR --parents $(cat release/files_common) panda/ opendbc/ cereal/ /tmp/openpilot && cd /tmp/openpiot && scons -j$(nproc)"
         docker run tmppilot /bin/bash -c "$CMD"
 
   push:
