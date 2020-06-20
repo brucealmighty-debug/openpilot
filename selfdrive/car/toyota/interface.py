@@ -193,7 +193,7 @@ class CarInterface(CarInterfaceBase):
           ret.lateralTuning.pid.kf = 0.00007818594
           break
 
-    elif candidate in [CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2]:
+    elif candidate in [CAR.COROLLA_TSS2_LTD, CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2]:
       stop_and_go = True
       ret.safetyParam = 73
       ret.wheelbase = 2.63906
