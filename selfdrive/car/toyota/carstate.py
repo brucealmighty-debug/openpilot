@@ -1,3 +1,4 @@
+import logging
 from cereal import car
 from common.numpy_fast import mean
 from opendbc.can.can_define import CANDefine
@@ -12,6 +13,8 @@ class CarState(CarStateBase):
     super().__init__(CP)
     can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
     self.shifter_values = can_define.dv["GEAR_PACKET"]['GEAR']
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("CarState __init__")
 
     # All TSS2 car have the accurate sensor
     self.accurate_steer_angle_seen = CP.carFingerprint in TSS2_CAR
@@ -112,6 +115,7 @@ class CarState(CarStateBase):
   @staticmethod
   def get_can_parser(CP):
 
+    logging.info("CarState get_can_parser")
     signals = [
       # sig_name, sig_address, default
       ("STEER_ANGLE", "STEER_ANGLE_SENSOR", 0),
@@ -174,15 +178,24 @@ class CarState(CarStateBase):
     if CP.carFingerprint in TSS2_CAR:
       signals += [("L_ADJACENT", "BSM", 0)]
       signals += [("R_ADJACENT", "BSM", 0)]
-
+    
+    logging.info("DBC.CP.carFingerprint.pt: %d", DBC[CP.carFingerprint]['pt'])
+    logging.info("signals: %s", signals)
+    logging.info("checks: %s", checks)
+    
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
   @staticmethod
   def get_cam_can_parser(CP):
 
+    logging.info("CarState get_cam_can_parser")
     signals = [("FORCE", "PRE_COLLISION", 0), ("PRECOLLISION_ACTIVE", "PRE_COLLISION", 0)]
 
     # use steering message to check if panda is connected to frc
     checks = [("STEERING_LKA", 42)]
+
+    logging.info("DBC.CP.carFingerprint.pt: %d", DBC[CP.carFingerprint]['pt'])
+    logging.info("signals: %s", signals)
+    logging.info("checks: %s", checks)
 
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 2)
