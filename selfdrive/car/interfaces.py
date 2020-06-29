@@ -1,5 +1,6 @@
 import os
 import time
+import logging
 from cereal import car
 from common.kalman.simple_kalman import KF1D
 from common.realtime import DT_CTRL
@@ -17,6 +18,10 @@ MAX_CTRL_SPEED = (V_CRUISE_MAX + 4) * CV.KPH_TO_MS  # 144 + 4 = 92 mph
 
 class CarInterfaceBase():
   def __init__(self, CP, CarController, CarState):
+      
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("CarInterfaceBase __init__")
+
     self.CP = CP
     self.VM = VehicleModel(CP)
 
@@ -133,6 +138,8 @@ class CarInterfaceBase():
 
 class RadarInterfaceBase():
   def __init__(self, CP):
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("RadarInterfaceBase __init__")
     self.pts = {}
     self.delay = 0
     self.radar_ts = CP.radarTimeStep
@@ -147,6 +154,8 @@ class RadarInterfaceBase():
 
 class CarStateBase:
   def __init__(self, CP):
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("CarStateBase __init__")
     self.CP = CP
     self.car_fingerprint = CP.carFingerprint
     self.cruise_buttons = 0
