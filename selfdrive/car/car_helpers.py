@@ -1,4 +1,5 @@
 import os
+import logging
 from common.params import Params
 from common.basedir import BASEDIR
 from selfdrive.car.fingerprints import eliminate_incompatible_cars, all_known_cars
@@ -161,16 +162,30 @@ def fingerprint(logcan, sendcan, has_relay):
 
 
 def get_car(logcan, sendcan, has_relay=False):
-  candidate, fingerprints, vin, car_fw, source = fingerprint(logcan, sendcan, has_relay)
 
+  logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+  logging.info("car_helpers get_car")
+
+  candidate, fingerprints, vin, car_fw, source = fingerprint(logcan, sendcan, has_relay)
+  logging.info("candidate: %s", candidate)
+  logging.info("fingerprints: %s", fingerprints)
+  logging.info("vin: %s", vin)
+  logging.info("car_fw: %s", car_fw)
+  logging.info("source: %s", source)
+  
   if candidate is None:
     cloudlog.warning("car doesn't match any fingerprints: %r", fingerprints)
     candidate = "mock"
 
   CarInterface, CarController, CarState = interfaces[candidate]
+  logging.info("CarInterface: %s", CarInterface)
+  logging.info("CarController: %s", CarController)
+  logging.info("CarState: %s", CarState)
+  
   car_params = CarInterface.get_params(candidate, fingerprints, has_relay, car_fw)
   car_params.carVin = vin
   car_params.carFw = car_fw
   car_params.fingerprintSource = source
+  logging.info("car_params: %s", car_params)
 
   return CarInterface(car_params, CarController, CarState), car_params
