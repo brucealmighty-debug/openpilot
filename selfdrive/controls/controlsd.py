@@ -2,6 +2,7 @@
 import os
 import gc
 import subprocess
+import logging
 from cereal import car, log
 from common.numpy_fast import clip
 from common.realtime import sec_since_boot, set_realtime_priority, set_core_affinity, Ratekeeper, DT_CTRL
@@ -42,6 +43,9 @@ class Controls:
     gc.disable()
     set_realtime_priority(53)
     set_core_affinity(3)
+    
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("Controls __init__")
 
     # Setup sockets
     self.pm = pm
@@ -58,14 +62,19 @@ class Controls:
     if can_sock is None:
       can_timeout = None if os.environ.get('NO_CAN_TIMEOUT', False) else 100
       self.can_sock = messaging.sub_sock('can', timeout=can_timeout)
+      logging.info("NO_CAN_TIMEOUT")
 
     # wait for one health and one CAN packet
     hw_type = messaging.recv_one(self.sm.sock['health']).health.hwType
+    logging.info("hw_type: %s", hw_type)
     has_relay = hw_type in [HwType.blackPanda, HwType.uno]
+    logging.info("hw_type: %s", has_relay)
     print("Waiting for CAN messages...")
+    logging.info("Waiting for CAN messages...")
     messaging.get_one_can(self.can_sock)
 
     self.CI, self.CP = get_car(self.can_sock, self.pm.sock['sendcan'], has_relay)
+    logging.info("get_car function returned")
 
     # read params
     params = Params()
@@ -232,6 +241,7 @@ class Controls:
 
     # Update carState from CAN
     can_strs = messaging.drain_sock_raw(self.can_sock, wait_for_one=True)
+    logging.info("can_strs read from CAN in data_sample func: %s", can_strs)
     CS = self.CI.update(self.CC, can_strs)
 
     self.sm.update(0)
@@ -243,6 +253,7 @@ class Controls:
     else:
       self.can_rcv_error = False
 
+    logging.info("can_strs after sm.update in data_sample func: %s", can_strs)
     # When the panda and controlsd do not agree on controls_allowed
     # we want to disengage openpilot. However the status from the panda goes through
     # another socket other than the CAN messages and one can arrive earlier than the other.
@@ -252,7 +263,9 @@ class Controls:
 
     if not self.sm['health'].controlsAllowed and self.enabled:
       self.mismatch_counter += 1
-
+      
+    logging.info("mismatch_counter: %d", self.mismatch_counter)
+    
     return CS
 
   def state_transition(self, CS):
