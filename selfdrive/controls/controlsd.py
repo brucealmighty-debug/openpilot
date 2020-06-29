@@ -73,8 +73,6 @@ class Controls:
     logging.info("Waiting for CAN messages...")
     messaging.get_one_can(self.can_sock)
     
-    logging.info("self.can_sock: %s", self.can_sock)
-    logging.info("self.pm.sock['sendcan']: %s", self.pm.sock['sendcan'])
     self.CI, self.CP = get_car(self.can_sock, self.pm.sock['sendcan'], has_relay)
     logging.info("get_car function returned")
 
