@@ -164,6 +164,8 @@ class CarStateBase:
     self.car_fingerprint = CP.carFingerprint
     self.cruise_buttons = 0
     self.out = car.CarState.new_message()
+    logging.info("car fingerprint: %s", self.car_fingerprint)
+    logging.info("CarState new message: %s", self.out)
 
     # Q = np.matrix([[10.0, 0.0], [0.0, 100.0]])
     # R = 1e3
@@ -171,6 +173,7 @@ class CarStateBase:
                          A=[[1.0, DT_CTRL], [0.0, 1.0]],
                          C=[1.0, 0.0],
                          K=[[0.12287673], [0.29666309]])
+    logging.info("self.v_ego_kf: %d", self.v_ego_kf)
     logging.info("exiting CarStateBase __init__")
 
   def update_speed_kf(self, v_ego_raw):
