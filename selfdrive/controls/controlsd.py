@@ -68,11 +68,13 @@ class Controls:
     hw_type = messaging.recv_one(self.sm.sock['health']).health.hwType
     logging.info("hw_type: %s", hw_type)
     has_relay = hw_type in [HwType.blackPanda, HwType.uno]
-    logging.info("hw_type: %s", has_relay)
+    logging.info("has_relay: %s", has_relay)
     print("Waiting for CAN messages...")
     logging.info("Waiting for CAN messages...")
     messaging.get_one_can(self.can_sock)
-
+    
+    logging.info("self.can_sock: %s", self.can_sock)
+    logging.info("self.pm.sock['sendcan']: %s", self.pm.sock['sendcan'])
     self.CI, self.CP = get_car(self.can_sock, self.pm.sock['sendcan'], has_relay)
     logging.info("get_car function returned")
 
