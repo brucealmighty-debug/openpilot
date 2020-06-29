@@ -36,6 +36,8 @@ class CarInterfaceBase():
     self.CC = None
     if CarController is not None:
       self.CC = CarController(self.cp.dbc_name, CP, self.VM)
+      
+    logging.info("exiting CarInterfaceBase __init__")
 
   @staticmethod
   def calc_accel_override(a_ego, a_target, v_ego, v_target):
@@ -149,6 +151,8 @@ class RadarInterfaceBase():
 
     if 'NO_RADAR_SLEEP' not in os.environ:
       time.sleep(self.radar_ts)  # radard runs on RI updates
+      
+    logging.info("exiting RadarInterfaceBase __init__")
 
     return ret
 
@@ -167,6 +171,7 @@ class CarStateBase:
                          A=[[1.0, DT_CTRL], [0.0, 1.0]],
                          C=[1.0, 0.0],
                          K=[[0.12287673], [0.29666309]])
+    logging.info("exiting CarStateBase __init__")
 
   def update_speed_kf(self, v_ego_raw):
     if abs(v_ego_raw - self.v_ego_kf.x[0][0]) > 2.0:  # Prevent large accelerations when car starts at non zero speed
