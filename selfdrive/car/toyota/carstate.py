@@ -14,7 +14,7 @@ class CarState(CarStateBase):
     logging.info("CarState __init__")
     super().__init__(CP)
     logging.info("CP.carFingerprint: %s", CP.carFingerprint)
-    CANDefine(can_define, DBC[CP.carFingerprint]['pt'])
+    can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
     self.shifter_values = can_define.dv["GEAR_PACKET"]['GEAR']
     logging.info("self.shifter_values: %s", self.shifter_values)
 
