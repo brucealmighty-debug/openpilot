@@ -168,9 +168,9 @@ def get_car(logcan, sendcan, has_relay=False):
 
   candidate, fingerprints, vin, car_fw, source = fingerprint(logcan, sendcan, has_relay)
   logging.info("candidate: %s", candidate)
-  logging.info("fingerprints: %s", fingerprints)
+  #logging.info("fingerprints: %s", fingerprints)
   logging.info("vin: %s", vin)
-  logging.info("car_fw: %s", car_fw)
+  #logging.info("car_fw: %s", car_fw)
   logging.info("source: %s", source)
   
   if candidate is None:
@@ -183,6 +183,7 @@ def get_car(logcan, sendcan, has_relay=False):
   car_params.carVin = vin
   car_params.carFw = car_fw
   car_params.fingerprintSource = source
-  logging.info("car_params: %s", car_params)
+  #logging.info("car_params: %s", car_params)
+  logging.info("entering troubled CarInterface domain!!!")
 
   return CarInterface(car_params, CarController, CarState), car_params

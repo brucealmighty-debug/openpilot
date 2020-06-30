@@ -10,20 +10,25 @@ from selfdrive.car.toyota.values import CAR, DBC, STEER_THRESHOLD, TSS2_CAR, NO_
 
 class CarState(CarStateBase):
   def __init__(self, CP):
-    super().__init__(CP)
-    can_define = CANDefine(DBC[CP.carFingerprint]['pt'])
-    self.shifter_values = can_define.dv["GEAR_PACKET"]['GEAR']
     logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarState __init__")
+    super().__init__(CP)
+    logging.info("CP.carFingerprint: %s", CP.carFingerprint)
+    CANDefine(can_define, DBC[CP.carFingerprint]['pt'])
+    self.shifter_values = can_define.dv["GEAR_PACKET"]['GEAR']
+    logging.info("self.shifter_values: %s", self.shifter_values)
 
     # All TSS2 car have the accurate sensor
     self.accurate_steer_angle_seen = CP.carFingerprint in TSS2_CAR
+    logging.info("self.accurate_steer_angle_seen: %s", self.accurate_steer_angle_seen)
 
     # On NO_DSU cars but not TSS2 cars the cp.vl["STEER_TORQUE_SENSOR"]['STEER_ANGLE']
     # is zeroed to where the steering angle is at start.
     # Need to apply an offset as soon as the steering angle measurements are both received
     self.needs_angle_offset = CP.carFingerprint not in TSS2_CAR
+    logging.info("self.needs_angle_offset: %d", self.needs_angle_offset)
     self.angle_offset = 0.
+    logging.info("exiting CarState __init__")
 
   def update(self, cp, cp_cam):
     ret = car.CarState.new_message()

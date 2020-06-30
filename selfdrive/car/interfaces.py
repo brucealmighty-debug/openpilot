@@ -29,9 +29,13 @@ class CarInterfaceBase():
     self.low_speed_alert = False
 
     if CarState is not None:
+      logging.info("b4 entering CarState in CarInterfaceBase __init__")
       self.CS = CarState(CP)
+      logging.info("aft CarState b4 get_can_parser")
       self.cp = self.CS.get_can_parser(CP)
+      logging.info("exited get_can_parser and entering get_cam_can_parser in CarInterfaceBase")
       self.cp_cam = self.CS.get_cam_can_parser(CP)
+      logging.info("exited get_cam_can_parser in CarInterfaceBase")
 
     self.CC = None
     if CarController is not None:
@@ -165,7 +169,7 @@ class CarStateBase:
     self.cruise_buttons = 0
     self.out = car.CarState.new_message()
     logging.info("car fingerprint: %s", self.car_fingerprint)
-    logging.info("CarState new message: %s", self.out)
+    #logging.info("CarState new message: %s", self.out)
 
     # Q = np.matrix([[10.0, 0.0], [0.0, 100.0]])
     # R = 1e3
