@@ -340,6 +340,9 @@ class CarInterface(CarInterfaceBase):
   # to be called @ 100hz
   def apply(self, c):
 
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("CarInterface apply")
+
     can_sends = self.CC.update(c.enabled, self.CS, self.frame,
                                c.actuators, c.cruiseControl.cancel,
                                c.hudControl.visualAlert, c.hudControl.leftLaneVisible,
@@ -347,4 +350,5 @@ class CarInterface(CarInterfaceBase):
                                c.hudControl.leftLaneDepart, c.hudControl.rightLaneDepart)
 
     self.frame += 1
+    logging.info("frame: %d", self.frame)
     return can_sends

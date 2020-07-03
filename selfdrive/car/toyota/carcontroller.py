@@ -6,6 +6,7 @@ from selfdrive.car.toyota.toyotacan import create_steer_command, create_ui_comma
                                            create_fcw_command
 from selfdrive.car.toyota.values import Ecu, CAR, STATIC_MSGS, SteerLimitParams
 from opendbc.can.packer import CANPacker
+import logging
 
 VisualAlert = car.CarControl.HUDControl.VisualAlert
 
@@ -32,6 +33,9 @@ def accel_hysteresis(accel, accel_steady, enabled):
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("CarController __init__")
+
     self.last_steer = 0
     self.accel_steady = 0.
     self.alert_active = False
@@ -48,6 +52,7 @@ class CarController():
       self.fake_ecus.add(Ecu.dsu)
 
     self.packer = CANPacker(dbc_name)
+    logging.info("existing CarController __init_")
 
   def update(self, enabled, CS, frame, actuators, pcm_cancel_cmd, hud_alert,
              left_line, right_line, lead, left_lane_depart, right_lane_depart):
@@ -55,7 +60,7 @@ class CarController():
     # *** compute control surfaces ***
 
     # gas and brake
-
+    logging.info("CarController update")
     apply_gas = clip(actuators.gas, 0., 1.)
 
     if CS.CP.enableGasInterceptor:
@@ -158,5 +163,8 @@ class CarController():
     for (addr, ecu, cars, bus, fr_step, vl) in STATIC_MSGS:
       if frame % fr_step == 0 and ecu in self.fake_ecus and CS.CP.carFingerprint in cars:
         can_sends.append(make_can_msg(addr, vl, bus))
-
+    
+    logging.info("can_sends: %s", can_sends)
+    logging.info("exiting CarController update")
+    
     return can_sends
