@@ -164,7 +164,6 @@ class CarController():
       if frame % fr_step == 0 and ecu in self.fake_ecus and CS.CP.carFingerprint in cars:
         can_sends.append(make_can_msg(addr, vl, bus))
     
-    logging.info("can_sends: %s", can_sends)
     logging.info("exiting CarController update")
     
     return can_sends

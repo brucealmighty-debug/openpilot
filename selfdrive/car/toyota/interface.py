@@ -351,5 +351,6 @@ class CarInterface(CarInterfaceBase):
                                c.hudControl.leftLaneDepart, c.hudControl.rightLaneDepart)
 
     self.frame += 1
+    logging.info("can_sends: %s", can_sends)
     logging.info("frame: %d", self.frame)
     return can_sends
