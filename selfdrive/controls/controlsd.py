@@ -241,7 +241,7 @@ class Controls:
 
     # Update carState from CAN
     can_strs = messaging.drain_sock_raw(self.can_sock, wait_for_one=True)
-    logging.info("can_strs read from CAN in data_sample func: %s", can_strs)
+    #logging.info("can_strs read from CAN in data_sample func: %s", can_strs)
     CS = self.CI.update(self.CC, can_strs)
 
     self.sm.update(0)
