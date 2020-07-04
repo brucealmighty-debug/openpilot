@@ -44,6 +44,7 @@ class CarController():
 
     self.last_fault_frame = -200
     self.steer_rate_limited = False
+    self.full_speed = True
 
     self.fake_ecus = set()
     if CP.enableCamera:
@@ -105,6 +106,8 @@ class CarController():
     self.last_standstill = CS.out.standstill
 
     can_sends = []
+    if(CS.CP.carFingerprint == CAR.COROLLA_TSS2_LTD):
+        self.full_speed = False
 
     #*** control msgs ***
     #print("steer {0} {1} {2} {3}".format(apply_steer, min_lim, max_lim, CS.steer_torque_motor)
@@ -128,9 +131,9 @@ class CarController():
       if pcm_cancel_cmd and CS.CP.carFingerprint == CAR.LEXUS_IS:
         can_sends.append(create_acc_cancel_command(self.packer))
       elif CS.CP.openpilotLongitudinalControl:
-        can_sends.append(create_accel_command(self.packer, apply_accel, pcm_cancel_cmd, self.standstill_req, lead))
+        can_sends.append(create_accel_command(self.packer, apply_accel, pcm_cancel_cmd, self.standstill_req, lead, self.full_speed))
       else:
-        can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead))
+        can_sends.append(create_accel_command(self.packer, 0, pcm_cancel_cmd, False, lead, self.full_speed))
 
     if (frame % 2 == 0) and (CS.CP.enableGasInterceptor):
       # send exactly zero if apply_gas is zero. Interceptor will send the max between read value and apply_gas.
@@ -153,7 +156,11 @@ class CarController():
       send_ui = True
 
     if (frame % 100 == 0 or send_ui) and Ecu.fwdCamera in self.fake_ecus:
-      can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, left_line, right_line, left_lane_depart, right_lane_depart))
+        if (self.full_speed):
+            set_me_x0c = 0x0c
+        else:
+            set_me_x0c = 0x0a            
+        can_sends.append(create_ui_command(self.packer, steer_alert, pcm_cancel_cmd, left_line, right_line, left_lane_depart, set_me_x0c))
 
     if frame % 100 == 0 and Ecu.dsu in self.fake_ecus:
       can_sends.append(create_fcw_command(self.packer, fcw_alert))
