@@ -199,7 +199,7 @@ class CarState(CarStateBase):
     # use steering message to check if panda is connected to frc
     checks = [("STEERING_LKA", 42)]
 
-    logging.info("DBC.CP.carFingerprint.pt: %d", DBC[CP.carFingerprint]['pt'])
+    logging.info("DBC.CP.carFingerprint.pt: %s", DBC[CP.carFingerprint]['pt'])
     logging.info("signals: %s", signals)
     logging.info("checks: %s", checks)
 
