@@ -253,7 +253,7 @@ class Controls:
     else:
       self.can_rcv_error = False
 
-    logging.info("can_strs after sm.update in data_sample func: %s", can_strs)
+    #logging.info("can_strs after sm.update in data_sample func: %s", can_strs)
     # When the panda and controlsd do not agree on controls_allowed
     # we want to disengage openpilot. However the status from the panda goes through
     # another socket other than the CAN messages and one can arrive earlier than the other.
