@@ -28,9 +28,9 @@ def create_lta_steer_command(packer, steer, steer_req, raw_cnt):
   return packer.make_can_msg("STEERING_LTA", 0, values)
 
 
-def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead, full_speed):
+def create_accel_command(packer, accel, pcm_cancel, standstill_req, lead, full_speed_acc):
   # TODO: find the exact canceling bit that does not create a chime
-  if full_speed:
+  if full_speed_acc:
       values = {
         "ACCEL_CMD": accel,
         "SET_ME_X01": 1,

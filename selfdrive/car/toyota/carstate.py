@@ -184,7 +184,7 @@ class CarState(CarStateBase):
       signals += [("L_ADJACENT", "BSM", 0)]
       signals += [("R_ADJACENT", "BSM", 0)]
     
-    logging.info("DBC.CP.carFingerprint.pt: %d", DBC[CP.carFingerprint]['pt'])
+    logging.info("DBC.CP.carFingerprint.pt: %s", DBC[CP.carFingerprint]['pt'])
     logging.info("signals: %s", signals)
     logging.info("checks: %s", checks)
     
