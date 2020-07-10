@@ -168,6 +168,7 @@ class CarController():
     for (addr, ecu, cars, bus, fr_step, vl) in STATIC_MSGS:
       if frame % fr_step == 0 and ecu in self.fake_ecus and CS.CP.carFingerprint in cars:
         can_sends.append(make_can_msg(addr, vl, bus))
+        logging.info("Static CAN MSGS appended to be sent")
     
     logging.info("exiting CarController update")
     

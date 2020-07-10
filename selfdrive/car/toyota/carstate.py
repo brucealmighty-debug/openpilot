@@ -10,7 +10,7 @@ from selfdrive.car.toyota.values import CAR, DBC, STEER_THRESHOLD, TSS2_CAR, NO_
 
 class CarState(CarStateBase):
   def __init__(self, CP):
-    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarState __init__")
     super().__init__(CP)
     logging.info("CP.carFingerprint: %s", CP.carFingerprint)

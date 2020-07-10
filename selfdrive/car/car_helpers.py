@@ -163,7 +163,7 @@ def fingerprint(logcan, sendcan, has_relay):
 
 def get_car(logcan, sendcan, has_relay=False):
 
-  logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+  logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
   logging.info("car_helpers get_car")
 
   candidate, fingerprints, vin, car_fw, source = fingerprint(logcan, sendcan, has_relay)

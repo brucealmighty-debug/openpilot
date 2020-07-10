@@ -19,7 +19,7 @@ MAX_CTRL_SPEED = (V_CRUISE_MAX + 4) * CV.KPH_TO_MS  # 144 + 4 = 92 mph
 class CarInterfaceBase():
   def __init__(self, CP, CarController, CarState):
       
-    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarInterfaceBase __init__")
 
     self.CP = CP
@@ -162,7 +162,7 @@ class RadarInterfaceBase():
 
 class CarStateBase:
   def __init__(self, CP):
-    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarStateBase __init__")
     self.CP = CP
     self.car_fingerprint = CP.carFingerprint
