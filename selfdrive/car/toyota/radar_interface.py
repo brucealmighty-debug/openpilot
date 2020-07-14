@@ -30,6 +30,9 @@ def _create_radar_can_parser(car_fingerprint):
 
 class RadarInterface(RadarInterfaceBase):
   def __init__(self, CP):
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.info("RadarInterface __init__")
+
     super().__init__(CP)
     self.track_id = 0
     self.radar_ts = CP.radarTimeStep
@@ -50,8 +53,11 @@ class RadarInterface(RadarInterfaceBase):
     # No radar dbc for cars without DSU which are not TSS 2.0
     # TODO: make a adas dbc file for dsu-less models
     self.no_radar = CP.carFingerprint in NO_DSU_CAR and CP.carFingerprint not in TSS2_CAR
+    logging.info("Exiting RadarInterface __init__")
 
   def update(self, can_strings):
+    logging.info("RadarInterface update")
+
     if self.no_radar:
       time.sleep(self.radar_ts)
       return car.RadarData.new_message()
@@ -65,9 +71,13 @@ class RadarInterface(RadarInterfaceBase):
     rr = self._update(self.updated_messages)
     self.updated_messages.clear()
 
+    logging.info("Exiting RadarInterface update")
+
     return rr
 
   def _update(self, updated_messages):
+    logging.info("RadarInterface _update")
+
     ret = car.RadarData.new_message()
     errors = []
     if not self.rcp.can_valid:
@@ -105,4 +115,6 @@ class RadarInterface(RadarInterfaceBase):
             del self.pts[ii]
 
     ret.points = list(self.pts.values())
+    logging.info("Exiting RadarInterface _update")
+
     return ret
