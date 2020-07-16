@@ -156,7 +156,7 @@ class RadarInterfaceBase():
     if 'NO_RADAR_SLEEP' not in os.environ:
       time.sleep(self.radar_ts)  # radard runs on RI updates
       
-    logging.info("exiting RadarInterfaceBase update")
+    #logging.info("exiting RadarInterfaceBase update")
 
     return ret
 
