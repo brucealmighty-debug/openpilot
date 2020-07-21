@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import os
 import time
+import logging
 from opendbc.can.parser import CANParser
 from cereal import car
 from selfdrive.car.toyota.values import NO_DSU_CAR, DBC, TSS2_CAR
@@ -56,7 +57,7 @@ class RadarInterface(RadarInterfaceBase):
     logging.info("Exiting RadarInterface __init__")
 
   def update(self, can_strings):
-    #logging.info("RadarInterface update")
+    logging.info("RadarInterface update")
 
     if self.no_radar:
       time.sleep(self.radar_ts)
@@ -71,12 +72,12 @@ class RadarInterface(RadarInterfaceBase):
     rr = self._update(self.updated_messages)
     self.updated_messages.clear()
 
-    #logging.info("Exiting RadarInterface update")
+    logging.info("Exiting RadarInterface update")
 
     return rr
 
   def _update(self, updated_messages):
-    #logging.info("RadarInterface _update")
+    logging.info("RadarInterface _update")
 
     ret = car.RadarData.new_message()
     errors = []
@@ -115,6 +116,6 @@ class RadarInterface(RadarInterfaceBase):
             del self.pts[ii]
 
     ret.points = list(self.pts.values())
-    #logging.info("Exiting RadarInterface _update")
+    logging.info("Exiting RadarInterface _update")
 
     return ret
