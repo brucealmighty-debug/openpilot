@@ -44,7 +44,7 @@ class Controls:
     set_realtime_priority(53)
     set_core_affinity(3)
     
-    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("Controls __init__")
 
     # Setup sockets
@@ -270,7 +270,8 @@ class Controls:
 
   def state_transition(self, CS):
     """Compute conditional state transitions and execute actions on state transitions"""
-
+    
+    logging.info("Controls state_transition")
     self.v_cruise_kph_last = self.v_cruise_kph
 
     # if stock cruise is completely disabled, then we can use our own set speed logic
@@ -286,6 +287,7 @@ class Controls:
     self.current_alert_types = [ET.PERMANENT]
 
     # ENABLED, PRE ENABLING, SOFT DISABLING
+    logging.info("self.state: %s", self.state)
     if self.state != State.disabled:
       # user and immediate disable always have priority in a non-disabled state
       if self.events.any(ET.USER_DISABLE):
@@ -334,6 +336,7 @@ class Controls:
             self.state = State.enabled
           self.current_alert_types.append(ET.ENABLE)
           self.v_cruise_kph = initialize_v_cruise(CS.vEgo, CS.buttonEvents, self.v_cruise_kph_last)
+          logging.info("initializa_v_cruise trigged")
 
     # Check if actuators are enabled
     self.active = self.state == State.enabled or self.state == State.softDisabling
@@ -342,6 +345,8 @@ class Controls:
 
     # Check if openpilot is engaged
     self.enabled = self.active or self.state == State.preEnabled
+
+    logging.info("Controls exiting state_transition")
 
   def state_control(self, CS):
     """Given the state, this function returns an actuators packet"""

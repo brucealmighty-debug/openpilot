@@ -195,7 +195,8 @@ class CarInterface(CarInterfaceBase):
           break
 
     elif candidate in [CAR.COROLLA_TSS2_LTD, CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2]:
-      stop_and_go = False if (candidate in CAR.COROLLA_TSS2_LTD) else True
+      #stop_and_go = False if (candidate in CAR.COROLLA_TSS2_LTD) else True
+      stop_and_go = True
       ret.safetyParam = 73
       ret.wheelbase = 2.63906
       ret.steerRatio = 13.9
@@ -341,7 +342,7 @@ class CarInterface(CarInterfaceBase):
   # to be called @ 100hz
   def apply(self, c):
 
-    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarInterface apply")
 
     can_sends = self.CC.update(c.enabled, self.CS, self.frame,

@@ -33,7 +33,7 @@ def accel_hysteresis(accel, accel_steady, enabled):
 
 class CarController():
   def __init__(self, dbc_name, CP, VM):
-    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarController __init__")
 
     self.last_steer = 0

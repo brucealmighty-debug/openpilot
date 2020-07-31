@@ -10,7 +10,7 @@ from selfdrive.car.toyota.values import CAR, DBC, STEER_THRESHOLD, TSS2_CAR, NO_
 
 class CarState(CarStateBase):
   def __init__(self, CP):
-    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarState __init__")
     super().__init__(CP)
     logging.info("CP.carFingerprint: %s", CP.carFingerprint)
@@ -31,6 +31,7 @@ class CarState(CarStateBase):
     logging.info("exiting CarState __init__")
 
   def update(self, cp, cp_cam):
+    logging.info("CarState update")
     ret = car.CarState.new_message()
 
     ret.doorOpen = any([cp.vl["SEATS_DOORS"]['DOOR_OPEN_FL'], cp.vl["SEATS_DOORS"]['DOOR_OPEN_FR'],
@@ -100,7 +101,11 @@ class CarState(CarStateBase):
       ret.cruiseState.standstill = False
     else:
       ret.cruiseState.standstill = self.pcm_acc_status == 7
-    ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]['CRUISE_ACTIVE'])
+    # enable ACC below minEnableSpeed for COROLLA_TSS2_LTD
+    if self.CP.carFingerprint == CAR.COROLLA_TSS2_LTD:
+      ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]['CRUISE_ACTIVE'])
+    else:
+      ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]['CRUISE_ACTIVE'])
     # TODO: CRUISE_STATE is a 4 bit signal, find any other non-adaptive cruise states
     ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]['CRUISE_STATE'] in [5]
 
@@ -118,6 +123,7 @@ class CarState(CarStateBase):
       ret.leftBlindspot = cp.vl["BSM"]['L_ADJACENT'] == 1
       ret.rightBlindspot = cp.vl["BSM"]['R_ADJACENT'] == 1
 
+    logging.info("ret: %s", ret)
     return ret
 
   @staticmethod

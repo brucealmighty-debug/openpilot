@@ -140,11 +140,15 @@ class CarInterfaceBase():
       elif not cs_out.cruiseState.enabled:
         events.add(EventName.pcmDisable)
 
+    logging.info("pcm_enable: %s", pcm_enable)
+    logging.info("cs_out.cruiseState.enabled: %s", cs_out.cruiseState.enabled)
+    logging.info("self.CS.out.cruiseState.enabled: %s", self.CS.out.cruiseState.enabled)
+
     return events
 
 class RadarInterfaceBase():
   def __init__(self, CP):
-    logging.basicConfig(level=logging.DEBUG, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+    logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("RadarInterfaceBase __init__")
     self.pts = {}
     self.delay = 0
