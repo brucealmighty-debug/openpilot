@@ -230,6 +230,16 @@ CONFIGS = [
     should_recv_callback=radar_rcv_callback,
   ),
   ProcessConfig(
+    proc_name="flyingcand",
+    pub_sub={
+      "flying_can": ["wifiState", "liveTracks"],
+      "liveParameters":  [], "controlsState":  [], "model":  [],
+    },
+    ignore=["logMonoTime", "valid", "radarState.cumLagMs"],
+    init_callback=get_car_params,
+    should_recv_callback=None,
+  ),
+  ProcessConfig(
     proc_name="plannerd",
     pub_sub={
       "model": ["pathPlan"], "radarState": ["plan"],

@@ -173,6 +173,7 @@ managed_processes = {
   "controlsd": "selfdrive.controls.controlsd",
   "plannerd": "selfdrive.controls.plannerd",
   "radard": "selfdrive.controls.radard",
+  "flyingcand": "selfdrive.controls.flyingcand",
   "dmonitoringd": "selfdrive.monitoring.dmonitoringd",
   "ubloxd": ("selfdrive/locationd", ["./ubloxd"]),
   "loggerd": ("selfdrive/loggerd", ["./loggerd"]),
@@ -229,6 +230,7 @@ if ANDROID:
     'tombstoned',
     'updated',
     'deleter',
+    'flyingcand',
   ]
 
 car_started_processes = [

@@ -10,6 +10,7 @@ def print_cpu_usage(first_proc, last_proc):
       ("./loggerd", 28.49),
       ("selfdrive.controls.plannerd", 19.77),
       ("selfdrive.controls.radard", 9.54),
+      ("selfdrive.controls.flyingcand", 0),
       ("./_ui", 9.54),
       ("./camerad", 7.07),
       ("selfdrive.locationd.locationd", 34.38),

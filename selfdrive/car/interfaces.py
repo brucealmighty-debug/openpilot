@@ -164,6 +164,22 @@ class RadarInterfaceBase():
 
     return ret
 
+class FlyingCANInterfaceBase():
+  def __inti__(self, CP):
+      logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
+      logging.info("FlyingCANInterfaceBase __init__")
+      self.pts = {}
+      self.delay = 0
+      self.radar_ts = CP.radarTimeStep
+        
+  def update(self, can_strings):
+      ret = car.RadarData.new_message()
+      
+      if 'NO_RADAR_SLEEP' not in os.environ:
+          time.sleep(self.radar_ts)
+      
+      return ret      
+        
 class CarStateBase:
   def __init__(self, CP):
     logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
