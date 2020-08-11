@@ -195,8 +195,7 @@ class CarInterface(CarInterfaceBase):
           break
 
     elif candidate in [CAR.COROLLA_TSS2_LTD, CAR.COROLLA_TSS2, CAR.COROLLAH_TSS2]:
-      #stop_and_go = False if (candidate in CAR.COROLLA_TSS2_LTD) else True
-      stop_and_go = True
+      stop_and_go = False if (candidate in CAR.COROLLA_TSS2_LTD) else True
       ret.safetyParam = 73
       ret.wheelbase = 2.63906
       ret.steerRatio = 13.9

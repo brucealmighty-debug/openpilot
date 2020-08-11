@@ -101,11 +101,8 @@ class CarState(CarStateBase):
       ret.cruiseState.standstill = False
     else:
       ret.cruiseState.standstill = self.pcm_acc_status == 7
-    # enable ACC below minEnableSpeed for COROLLA_TSS2_LTD
-    if self.CP.carFingerprint == CAR.COROLLA_TSS2_LTD:
-      ret.cruiseState.enabled = True
-    else:
-      ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]['CRUISE_ACTIVE'])
+    ret.cruiseState.enabled = bool(cp.vl["PCM_CRUISE"]['CRUISE_ACTIVE'])
+    
     # TODO: CRUISE_STATE is a 4 bit signal, find any other non-adaptive cruise states
     ret.cruiseState.nonAdaptive = cp.vl["PCM_CRUISE"]['CRUISE_STATE'] in [5]
 
