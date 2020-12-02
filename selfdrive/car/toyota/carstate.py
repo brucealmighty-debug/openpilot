@@ -117,8 +117,8 @@ class CarState(CarStateBase):
     self.steer_state = cp.vl["EPS_STATUS"]['LKA_STATE']
 
     if self.CP.carFingerprint in TSS2_CAR:
-      ret.leftBlindspot = cp.vl["BSM"]['L_ADJACENT'] == 1
-      ret.rightBlindspot = cp.vl["BSM"]['R_ADJACENT'] == 1
+      ret.leftBlindspot = (cp.vl["BSM"]['L_ADJACENT'] == 1) or (cp.vl["BSM"]['L_APPROACHING'] == 1)
+      ret.rightBlindspot = (cp.vl["BSM"]['R_ADJACENT'] == 1) or (cp.vl["BSM"]['R_APPROACHING'] == 1)
 
     logging.info("ret: %s", ret)
     return ret
@@ -188,22 +188,37 @@ class CarState(CarStateBase):
 
     if CP.carFingerprint in TSS2_CAR:
       signals += [("L_ADJACENT", "BSM", 0)]
+      signals += [("L_APPROACHING", "BSM", 0)]
       signals += [("R_ADJACENT", "BSM", 0)]
+<<<<<<< HEAD
     
     logging.info("DBC.CP.carFingerprint.pt: %s", DBC[CP.carFingerprint]['pt'])
     logging.info("signals: %s", signals)
     logging.info("checks: %s", checks)
     
+=======
+      signals += [("R_APPROACHING", "BSM", 0)]
+
+>>>>>>> a3d0c3b92112be5fdcc52d9675445f7f763f62eb
     return CANParser(DBC[CP.carFingerprint]['pt'], signals, checks, 0)
 
   @staticmethod
   def get_cam_can_parser(CP):
 
+<<<<<<< HEAD
     logging.info("CarState get_cam_can_parser")
     signals = [("FORCE", "PRE_COLLISION", 0), ("PRECOLLISION_ACTIVE", "PRE_COLLISION", 0)]
+=======
+    signals = [
+      ("FORCE", "PRE_COLLISION", 0),
+      ("PRECOLLISION_ACTIVE", "PRE_COLLISION", 0)
+    ]
+>>>>>>> a3d0c3b92112be5fdcc52d9675445f7f763f62eb
 
     # use steering message to check if panda is connected to frc
-    checks = [("STEERING_LKA", 42)]
+    checks = [
+      ("STEERING_LKA", 42)
+    ]
 
     logging.info("DBC.CP.carFingerprint.pt: %s", DBC[CP.carFingerprint]['pt'])
     logging.info("signals: %s", signals)

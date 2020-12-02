@@ -1,20 +1,26 @@
 import os
 import time
+<<<<<<< HEAD
 import logging
+=======
+from typing import Dict
+
+>>>>>>> a3d0c3b92112be5fdcc52d9675445f7f763f62eb
 from cereal import car
 from common.kalman.simple_kalman import KF1D
 from common.realtime import DT_CTRL
 from selfdrive.car import gen_empty_fingerprint
 from selfdrive.config import Conversions as CV
+from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX
 from selfdrive.controls.lib.events import Events
 from selfdrive.controls.lib.vehicle_model import VehicleModel
-from selfdrive.controls.lib.drive_helpers import V_CRUISE_MAX
 
 GearShifter = car.CarState.GearShifter
 EventName = car.CarEvent.EventName
 MAX_CTRL_SPEED = (V_CRUISE_MAX + 4) * CV.KPH_TO_MS  # 144 + 4 = 92 mph
 
 # generic car and radar interfaces
+
 
 class CarInterfaceBase():
   def __init__(self, CP, CarController, CarState):
@@ -35,7 +41,11 @@ class CarInterfaceBase():
       self.cp = self.CS.get_can_parser(CP)
       logging.info("exited get_can_parser and entering get_cam_can_parser in CarInterfaceBase")
       self.cp_cam = self.CS.get_cam_can_parser(CP)
+<<<<<<< HEAD
       logging.info("exited get_cam_can_parser in CarInterfaceBase")
+=======
+      self.cp_body = self.CS.get_body_can_parser(CP)
+>>>>>>> a3d0c3b92112be5fdcc52d9675445f7f763f62eb
 
     self.CC = None
     if CarController is not None:
@@ -52,15 +62,15 @@ class CarInterfaceBase():
     raise NotImplementedError
 
   @staticmethod
-  def get_params(candidate, fingerprint=gen_empty_fingerprint(), has_relay=False, car_fw=[]):  # pylint: disable=dangerous-default-value
+  def get_params(candidate, fingerprint=gen_empty_fingerprint(), car_fw=None):
     raise NotImplementedError
 
   # returns a set of default params to avoid repetition in car specific params
   @staticmethod
-  def get_std_params(candidate, fingerprint, has_relay):
+  def get_std_params(candidate, fingerprint):
     ret = car.CarParams.new_message()
     ret.carFingerprint = candidate
-    ret.isPandaBlack = has_relay
+    ret.isPandaBlack = True # TODO: deprecate this field
 
     # standard ALC params
     ret.steerControlType = car.CarParams.SteerControlType.torque
@@ -146,6 +156,7 @@ class CarInterfaceBase():
 
     return events
 
+
 class RadarInterfaceBase():
   def __init__(self, CP):
     logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
@@ -153,12 +164,13 @@ class RadarInterfaceBase():
     self.pts = {}
     self.delay = 0
     self.radar_ts = CP.radarTimeStep
+    self.no_radar_sleep = 'NO_RADAR_SLEEP' in os.environ
 
   def update(self, can_strings):
     ret = car.RadarData.new_message()
-
-    if 'NO_RADAR_SLEEP' not in os.environ:
+    if not self.no_radar_sleep:
       time.sleep(self.radar_ts)  # radard runs on RI updates
+<<<<<<< HEAD
       
     #logging.info("exiting RadarInterfaceBase update")
 
@@ -180,16 +192,24 @@ class FlyingCANInterfaceBase():
       
       return ret      
         
+=======
+    return ret
+
+
+>>>>>>> a3d0c3b92112be5fdcc52d9675445f7f763f62eb
 class CarStateBase:
   def __init__(self, CP):
     logging.basicConfig(level=logging.CRITICAL, filename="/tmp/brucelog", filemode="a+", format="%(asctime)-15s %(levelname)-8s %(message)s")
     logging.info("CarStateBase __init__")
     self.CP = CP
     self.car_fingerprint = CP.carFingerprint
-    self.cruise_buttons = 0
     self.out = car.CarState.new_message()
     logging.info("car fingerprint: %s", self.car_fingerprint)
     #logging.info("CarState new message: %s", self.out)
+
+    self.cruise_buttons = 0
+    self.left_blinker_cnt = 0
+    self.right_blinker_cnt = 0
 
     # Q = np.matrix([[10.0, 0.0], [0.0, 100.0]])
     # R = 1e3
@@ -207,12 +227,24 @@ class CarStateBase:
     v_ego_x = self.v_ego_kf.update(v_ego_raw)
     return float(v_ego_x[0]), float(v_ego_x[1])
 
+  def update_blinker(self, blinker_time: int, left_blinker_lamp: bool, right_blinker_lamp: bool):
+    self.left_blinker_cnt = blinker_time if left_blinker_lamp else max(self.left_blinker_cnt - 1, 0)
+    self.right_blinker_cnt = blinker_time if right_blinker_lamp else max(self.right_blinker_cnt - 1, 0)
+    return self.left_blinker_cnt > 0, self.right_blinker_cnt > 0
+
   @staticmethod
-  def parse_gear_shifter(gear):
-    return {'P': GearShifter.park, 'R': GearShifter.reverse, 'N': GearShifter.neutral,
-            'E': GearShifter.eco, 'T': GearShifter.manumatic, 'D': GearShifter.drive,
-            'S': GearShifter.sport, 'L': GearShifter.low, 'B': GearShifter.brake}.get(gear, GearShifter.unknown)
+  def parse_gear_shifter(gear: str) -> car.CarState.GearShifter:
+    d: Dict[str, car.CarState.GearShifter] = {
+      'P': GearShifter.park, 'R': GearShifter.reverse, 'N': GearShifter.neutral,
+      'E': GearShifter.eco, 'T': GearShifter.manumatic, 'D': GearShifter.drive,
+      'S': GearShifter.sport, 'L': GearShifter.low, 'B': GearShifter.brake
+    }
+    return d.get(gear, GearShifter.unknown)
 
   @staticmethod
   def get_cam_can_parser(CP):
+    return None
+
+  @staticmethod
+  def get_body_can_parser(CP):
     return None

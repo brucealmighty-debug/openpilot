@@ -3,7 +3,7 @@
 '''
 System tools like top/htop can only show current cpu usage values, so I write this script to do statistics jobs.
   Features:
-    Use psutil library to sample cpu usage(avergage for all cores) of OpenPilot processes, at a rate of 5 samples/sec.
+    Use psutil library to sample cpu usage(avergage for all cores) of openpilot processes, at a rate of 5 samples/sec.
     Do cpu usage statistics periodically, 5 seconds as a cycle.
     Caculate the average cpu usage within this cycle.
     Caculate minumium/maximium/accumulated_average cpu usage as long term inspections.
@@ -30,8 +30,23 @@ PRINT_INTERVAL = 5
 SLEEP_INTERVAL = 0.2
 
 monitored_proc_names = [
+<<<<<<< HEAD
   'ubloxd', 'thermald', 'uploader', 'deleter', 'controlsd', 'plannerd', 'radard', 'flyingcand', 'mapd', 'loggerd', 'logmessaged', 'tombstoned',
   'logcatd', 'proclogd', 'boardd', 'pandad', './ui', 'ui', 'calibrationd', 'params_learner', 'modeld', 'dmonitoringmodeld', 'camerad', 'sensord', 'updated', 'gpsd', 'athena']
+=======
+  # openpilot procs
+  'controlsd', 'locationd', 'loggerd','plannerd',
+  'ubloxd', 'thermald', 'uploader', 'deleter', 'radard', 'logmessaged', 'tombstoned',
+  'logcatd', 'proclogd', 'boardd', 'pandad', './ui', 'ui', 'calibrationd', 'params_learner', 'modeld', 'dmonitoringd',
+  'dmonitoringmodeld', 'camerad', 'sensord', 'updated', 'gpsd', 'athena', 'locationd', 'paramsd',
+
+  'ai.comma.plus.offroad',
+
+  # android procs
+  'SurfaceFlinger', 'sensors.qcom'
+]
+
+>>>>>>> a3d0c3b92112be5fdcc52d9675445f7f763f62eb
 cpu_time_names = ['user', 'system', 'children_user', 'children_system']
 
 timer = getattr(time, 'monotonic', time.time)
